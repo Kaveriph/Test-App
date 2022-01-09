@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/test_flow_graph"
+    app:startDestination="@id/loadingFragment">
+
+    <fragment
+        android:id="@+id/startTestFragment"
+        android:name="com.kaveri.byjutestapp.StartTestFragment"
+        android:label="fragment_start_test"
+        tools:layout="@layout/fragment_start_test">
+        <action
+            android:id="@+id/action_startTestFragment_to_testFragment"
+            app:destination="@id/testFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/testFragment"
+        android:name="com.kaveri.byjutestapp.TestFragment"
+        android:label="fragment_test"
+        tools:layout="@layout/fragment_test">
+        <action
+            android:id="@+id/action_testFragment_to_testSubmitFragment"
+            app:destination="@id/testSubmitFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/testSubmitFragment"
+        android:name="com.kaveri.byjutestapp.TestSubmitFragment"
+        android:label="fragment_test_submit"
+        tools:layout="@layout/fragment_test_submit" />
+
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.kaveri.byjutestapp.LoadingFragment"
+        android:label="fragment_loading"
+        tools:layout="@layout/fragment_loading">
+        <action
+            android:id="@+id/action_loadingFragment_to_startTestFragment"
+            app:destination="@id/startTestFragment" />
+        <action
+            android:id="@+id/action_loadingFragment_to_testFragment"
+            app:destination="@id/testFragment" />
+    </fragment>
+
+</navigation>
