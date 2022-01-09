@@ -1,31 +1,34 @@
-package com.kaveri.byjutestapp.utils
+package com.kaveri.byjutestapp.model
 
 import android.content.Context
 import android.content.SharedPreferences
 
-class SharedPreferenceHelper {
+/**
+* This is a helper for TestRepository to read the data from SharedPreefrences
+*
+* */
+class SharedPreferenceRepository {
     private val sharedPrefFile = "ByjusSharedPreference"
     private val TEST_END_TIME = "test_end_time"
-
-    /*
-    * getting the shared prefernce object
+    /**
+    * getting the shared preference object
     * */
     private fun getSharedPreference(context: Context) : SharedPreferences {
         return context.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
     }
 
-    /*
-    * This method checs for the TestEndTime set in the app.
+    /**
+    * This method checks for the TestEndTime set in the app.
     * If the END time is not set, it will return -1 meaning the test is not yet started
     * */
     fun getTestEndTime(context: Context) : Long {
         return getSharedPreference(context).getLong(TEST_END_TIME, -1L)
     }
 
-    /*
+    /**
     * This method sets the start time
     *
-    * @param context -> to create a sharedprefernce
+    * @param context -> to create a sharedpreference
     * @param minutes -> is the duration of the test.
     * */
     fun setTestEndTime(context: Context, minutes: Int) {
@@ -39,6 +42,11 @@ class SharedPreferenceHelper {
             .apply()
     }
 
+    /**
+    * This method clears the shared preference info
+    * This method should be triggered only when the test is complete
+    *
+    * */
     fun clearTestInfo(context: Context) {
         getSharedPreference(context).edit().clear().apply()
     }

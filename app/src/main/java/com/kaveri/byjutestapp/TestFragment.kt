@@ -5,7 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.kaveri.byjutestapp.utils.SharedPreferenceHelper
+import androidx.activity.addCallback
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.kaveri.byjutestapp.model.SharedPreferenceRepository
+import com.kaveri.byjutestapp.viewmodel.TestViewModel
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -13,13 +18,12 @@ import com.kaveri.byjutestapp.utils.SharedPreferenceHelper
  */
 class TestFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-       super.onCreate(savedInstanceState)
+    private val mViewModel: TestViewModel by lazy {
+        ViewModelProvider(this).get(TestViewModel::class.java)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        init()
+    override fun onCreate(savedInstanceState: Bundle?) {
+       super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -30,18 +34,37 @@ class TestFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_test, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initListeners()
+        initObservers()
+    }
 
-    private fun init() {
-        val testEndTime = context?.let { SharedPreferenceHelper().getTestEndTime(it) }
-        testEndTime?.let { handleTestStatus(it) }
+    private fun initListeners() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            activity?.finishAndRemoveTask()
+        }
+    }
+
+    private fun initObservers() {
+        mViewModel.testEndTime.observe(viewLifecycleOwner,  {
+            println("TestFrag Test end time is ${Date(it)}")
+            handleTestStatus(it)
+        })
+    }
+
+    private fun startTimer() {
+        mViewModel.setEndTime(30)
     }
 
     private fun handleTestStatus(testEndTime: Long) {
         val currentTime = System.currentTimeMillis()
-        if(testEndTime > currentTime) {
+        if (testEndTime == -1L) {
+            retrieveQuestionPaper()
+        } else if(testEndTime > currentTime) {
             loadTheSavedTest()
         } else {
-            context?.let { SharedPreferenceHelper().clearTestInfo(it) }
+            context?.let { SharedPreferenceRepository().clearTestInfo(it) }
             println("Start Test again")
         }
     }
@@ -52,5 +75,6 @@ class TestFragment : Fragment() {
 
     private fun retrieveQuestionPaper() {
         println("Call VM to retrieve Question paper...")
+        startTimer()
     }
 }

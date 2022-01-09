@@ -6,8 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.kaveri.byjutestapp.viewmodel.TestViewModel
 import kotlinx.android.synthetic.main.fragment_start_test.*
+import java.util.*
 
 
 /**
@@ -16,6 +20,10 @@ import kotlinx.android.synthetic.main.fragment_start_test.*
  */
 class StartTestFragment : Fragment() {
 
+    private val mViewModel by lazy {
+        ViewModelProvider(this).get(TestViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -23,6 +31,13 @@ class StartTestFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initListeners()
+        initObservers()
+    }
+
+    private fun initObservers() {
+        mViewModel.testEndTime.observe(viewLifecycleOwner,  {
+            println("StartFrag : Test end time is ${Date(it)}")
+        })
     }
 
     override fun onCreateView(

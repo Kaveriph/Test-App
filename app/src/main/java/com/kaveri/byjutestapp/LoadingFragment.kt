@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.kaveri.byjutestapp.utils.SharedPreferenceHelper
+import com.kaveri.byjutestapp.model.SharedPreferenceRepository
+import com.kaveri.byjutestapp.viewmodel.TestViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,6 +20,10 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class LoadingFragment : Fragment() {
+
+    private val mViewModel by lazy {
+        ViewModelProvider(this).get(TestViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +39,8 @@ class LoadingFragment : Fragment() {
     }
 
     private fun initUi() {
-        val testEndTime = context?.let { SharedPreferenceHelper().getTestEndTime(it) }
-        if(testEndTime == -1L) {
+        val testEndTime = mViewModel.testEndTime
+        if(testEndTime.value == -1L) {
             findNavController().navigate(R.id.action_loadingFragment_to_startTestFragment)
         } else {
             findNavController().navigate(R.id.action_loadingFragment_to_testFragment)
