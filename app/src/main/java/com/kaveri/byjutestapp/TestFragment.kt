@@ -75,11 +75,5 @@ class TestFragment : Fragment() {
     private fun retrieveQuestionPaper() {
         println("Call VM to retrieve Question paper...")
         mViewModel.getTestData()
-        startTimer()
-    }
-
-
-    private fun startTimer() {
-        mViewModel.setEndTime(30)
     }
 }

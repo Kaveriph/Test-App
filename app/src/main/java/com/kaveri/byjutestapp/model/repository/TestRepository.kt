@@ -2,17 +2,25 @@ package com.kaveri.byjutestapp.model.repository
 
 import android.content.Context
 import com.kaveri.byjutestapp.model.dataobject.Test
+import com.kaveri.byjutestapp.model.room.TestDao
+import com.kaveri.byjutestapp.model.room.TestRoomDatabase
 
 /**
  * This class implements all the methods to access the Model
  * */
-class TestRepository : ISharedPrefRepository, INetworkRepository {
+class TestRepository(val context: Context) : ISharedPrefRepository, INetworkRepository, IRoomDbRepository {
 
     private val networkRepository by lazy {
         NetworkRepository()
     }
     private val sharedPrefRepository by lazy {
         SharedPreferenceRepository()
+    }
+    private val database by lazy {
+        TestRoomDatabase.getDatabase(context)
+    }
+    private val dbRepository by lazy {
+        RoomDbRepository(database.testDao())
     }
 
     /**
@@ -41,5 +49,17 @@ class TestRepository : ISharedPrefRepository, INetworkRepository {
         failureCallback: (errorMessage: String) -> Unit
     ) {
         networkRepository.getTestData(successCallback, failureCallback)
+    }
+
+    override suspend fun insert(test: com.kaveri.byjutestapp.model.room.Test) {
+        dbRepository.insert(test)
+    }
+
+    override suspend fun getTestData(): com.kaveri.byjutestapp.model.room.Test {
+        return dbRepository.getTestData()
+    }
+
+    override suspend fun deleteTestData() {
+        return dbRepository.deleteTestData()
     }
 }
