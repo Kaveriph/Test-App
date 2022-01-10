@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.kaveri.byjutestapp.model.SharedPreferenceRepository
 import com.kaveri.byjutestapp.viewmodel.TestViewModel
 
 // TODO: Rename parameter arguments, choose names that match

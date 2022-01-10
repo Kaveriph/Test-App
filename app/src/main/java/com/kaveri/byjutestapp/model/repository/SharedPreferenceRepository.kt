@@ -1,4 +1,4 @@
-package com.kaveri.byjutestapp.model
+package com.kaveri.byjutestapp.model.repository
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -6,9 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.kaveri.byjutestapp.model.SharedPreferenceRepository
+import com.kaveri.byjutestapp.model.repository.SharedPreferenceRepository
 import com.kaveri.byjutestapp.viewmodel.TestViewModel
 import java.util.*
 
@@ -51,11 +50,11 @@ class TestFragment : Fragment() {
             println("TestFrag Test end time is ${Date(it)}")
             handleTestStatus(it)
         })
+        mViewModel.testData.observe(viewLifecycleOwner, {
+            println("Test data retrieved ${it.toString()}")
+        })
     }
 
-    private fun startTimer() {
-        mViewModel.setEndTime(30)
-    }
 
     private fun handleTestStatus(testEndTime: Long) {
         val currentTime = System.currentTimeMillis()
@@ -75,6 +74,12 @@ class TestFragment : Fragment() {
 
     private fun retrieveQuestionPaper() {
         println("Call VM to retrieve Question paper...")
+        mViewModel.getTestData()
         startTimer()
+    }
+
+
+    private fun startTimer() {
+        mViewModel.setEndTime(30)
     }
 }
