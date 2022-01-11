@@ -35,13 +35,13 @@
 
     <fragment
         android:id="@+id/testSubmitFragment"
-        android:name="com.kaveri.byjutestapp.TestSubmitFragment"
+        android:name="com.kaveri.byjutestapp.view.TestSubmitFragment"
         android:label="fragment_test_submit"
         tools:layout="@layout/fragment_test_submit" />
 
     <fragment
         android:id="@+id/loadingFragment"
-        android:name="com.kaveri.byjutestapp.LoadingFragment"
+        android:name="com.kaveri.byjutestapp.view.LoadingFragment"
         android:label="fragment_loading"
         tools:layout="@layout/fragment_loading">
         <action
