@@ -1,16 +1,21 @@
 package com.kaveri.byjutestapp.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.kaveri.byjutestapp.R
+import com.kaveri.byjutestapp.model.dataobject.Questions
 import com.kaveri.byjutestapp.model.repository.SharedPreferenceRepository
 import com.kaveri.byjutestapp.viewmodel.TestViewModel
+import kotlinx.android.synthetic.main.fragment_test.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -18,6 +23,8 @@ import java.util.*
  */
 class TestFragment : Fragment() {
 
+    private lateinit var viewPager2Adapter: ViewPager2Adapter
+    var listOfQuestions = ArrayList<Questions>()
     private val mViewModel: TestViewModel by lazy {
         ViewModelProvider(this).get(TestViewModel::class.java)
     }
@@ -36,8 +43,34 @@ class TestFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         initListeners()
         initObservers()
+    }
+
+    private fun initView() {
+        viewPager2Adapter = ViewPager2Adapter(requireContext(), listOfQuestions)
+        testViewPager.adapter = viewPager2Adapter
+        testViewPager.registerOnPageChangeCallback(ViewPageCallback())
+    }
+
+    class ViewPageCallback : ViewPager2.OnPageChangeCallback() {
+
+        override fun onPageScrollStateChanged(state: Int) {
+            super.onPageScrollStateChanged(state)
+        }
+
+        override fun onPageScrolled(
+            position: Int,
+            positionOffset: Float,
+            positionOffsetPixels: Int
+        ) {
+            super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+        }
+
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+        }
     }
 
     private fun initListeners() {
@@ -53,6 +86,8 @@ class TestFragment : Fragment() {
         })
         mViewModel.testData.observe(viewLifecycleOwner, {
             println("Test data retrieved ${it.toString()}")
+            listOfQuestions.addAll(it.questions)
+            viewPager2Adapter.notifyDataSetChanged()
         })
     }
 
@@ -64,17 +99,21 @@ class TestFragment : Fragment() {
         } else if(testEndTime > currentTime) {
             loadTheSavedTest()
         } else {
-            context?.let { SharedPreferenceRepository().clearTestInfo(it) }
-            println("Start Test again")
+            // when the test time is over, deleteTestData()
+            // Or
+            findNavController().navigate(R.id.action_testFragment_to_testSubmitFragment)
         }
     }
 
     private fun loadTheSavedTest() {
-        println("Loading from DB.....")
+        mViewModel.readTestDataFromDb()
     }
 
     private fun retrieveQuestionPaper() {
-        println("Call VM to retrieve Question paper...")
-        mViewModel.getTestData()
+        mViewModel.getTestDataFromBackEnd()
+    }
+
+    private fun deleteTestData() {
+        mViewModel.deleteTestData(requireContext())
     }
 }
