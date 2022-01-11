@@ -40,10 +40,15 @@ class LoadingFragment : Fragment() {
 
     private fun initUi() {
         val testEndTime = mViewModel.testEndTime
+        val currentTime = System.currentTimeMillis()
         if(testEndTime.value == -1L) {
             findNavController().navigate(R.id.action_loadingFragment_to_startTestFragment)
-        } else {
+        } else if(testEndTime.value!! > currentTime) {
             findNavController().navigate(R.id.action_loadingFragment_to_testFragment)
+        } else {
+            // when the test time is over, deleteTestData()
+            // Or
+            findNavController().navigate(R.id.action_testFragment_to_testSubmitFragment)
         }
     }
 
