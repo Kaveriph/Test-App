@@ -2,7 +2,6 @@ package com.kaveri.byjutestapp.model.repository
 
 import android.content.Context
 import com.kaveri.byjutestapp.model.dataobject.Test
-import com.kaveri.byjutestapp.model.room.TestDao
 import com.kaveri.byjutestapp.model.room.TestRoomDatabase
 
 /**
@@ -38,7 +37,17 @@ class TestRepository(val context: Context) : ISharedPrefRepository, INetworkRepo
      * @param testTimeInMinutes is the total duration of the test in minutes
      * */
     override fun setEndTime(context: Context, testTimeInMinutes: Int) {
-        SharedPreferenceRepository().setTestEndTime(context, testTimeInMinutes)
+        sharedPrefRepository.setTestEndTime(context, testTimeInMinutes)
+    }
+
+
+    /**
+     * This method clears the Test end time saved in the shared preference
+     * @param context is required to get access to the ap's shared preference file
+     *
+     * */
+    override fun clearSharedPrefData(context: Context) {
+        sharedPrefRepository.clearTestInfo(context)
     }
 
     /***
@@ -51,15 +60,26 @@ class TestRepository(val context: Context) : ISharedPrefRepository, INetworkRepo
         networkRepository.getTestData(successCallback, failureCallback)
     }
 
+    /**
+     * This method inserts the data into the Databse
+     *  */
     override suspend fun insert(test: com.kaveri.byjutestapp.model.room.Test) {
         dbRepository.insert(test)
     }
 
+    /**
+     * This method reads the TestEntity data from the database.
+     * */
     override suspend fun getTestData(): com.kaveri.byjutestapp.model.room.Test {
         return dbRepository.getTestData()
     }
 
-    override suspend fun deleteTestData() {
-        return dbRepository.deleteTestData()
+
+    /**
+     * This method calls the method from dbRepository to delete all the data in the database
+     * This needs to be called when the test is submitted.
+     * */
+    override suspend fun deleteTestDataFromDb() {
+        return dbRepository.deleteTestDataFromDb()
     }
 }

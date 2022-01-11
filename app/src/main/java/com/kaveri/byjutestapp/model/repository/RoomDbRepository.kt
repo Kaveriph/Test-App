@@ -13,7 +13,7 @@ class RoomDbRepository(private val testDao: TestDao) : IRoomDbRepository {
         return testDao.getTestData()
     }
 
-    override suspend fun deleteTestData() {
+    override suspend fun deleteTestDataFromDb() {
         testDao.deleteTestData()
     }
 }
