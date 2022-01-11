@@ -16,12 +16,13 @@
 
 
     <EditText
-        android:layout_margin="@dimen/mc_options_margin"
+        android:layout_margin="@dimen/test_screen_margin"
         android:id="@+id/etAnswer"
         app:layout_constraintTop_toBottomOf="@+id/tvQuestion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:minLines="4"
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

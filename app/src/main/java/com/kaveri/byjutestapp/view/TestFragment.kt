@@ -11,7 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.kaveri.byjutestapp.R
 import com.kaveri.byjutestapp.model.dataobject.Questions
-import com.kaveri.byjutestapp.model.repository.SharedPreferenceRepository
+import com.kaveri.byjutestapp.model.room.MCQnA
+import com.kaveri.byjutestapp.model.room.SAQnA
 import com.kaveri.byjutestapp.viewmodel.TestViewModel
 import kotlinx.android.synthetic.main.fragment_test.*
 import java.util.*
@@ -49,9 +50,24 @@ class TestFragment : Fragment() {
     }
 
     private fun initView() {
-        viewPager2Adapter = ViewPager2Adapter(requireContext(), listOfQuestions)
+        viewPager2Adapter = ViewPager2Adapter(requireContext(), listOfQuestions, mcQtnCallback = { mcQna -> kotlin.run{
+            saveMcQna(mcQna)
+        } },
+        saQtnCallback = { saQna -> kotlin.run{
+            saveSAQna(saQna)
+        }})
         testViewPager.adapter = viewPager2Adapter
         testViewPager.registerOnPageChangeCallback(ViewPageCallback())
+    }
+
+    private fun saveSAQna(saQna: SAQnA) {
+        println("SA QNA: ${saQna.ans}")
+        mViewModel.saveMCQNA(saQna)
+    }
+
+    private fun saveMcQna(mcQna: MCQnA) {
+        println("MC QNA: ${mcQna.ans}")
+        mViewModel.saveMCQNA(mcQna)
     }
 
     class ViewPageCallback : ViewPager2.OnPageChangeCallback() {
@@ -88,6 +104,14 @@ class TestFragment : Fragment() {
             println("Test data retrieved ${it.toString()}")
             listOfQuestions.addAll(it.questions)
             viewPager2Adapter.notifyDataSetChanged()
+        })
+        mViewModel.mcQna.observe(viewLifecycleOwner, {
+            println("QNA read for MC type")
+            //set the same data on UI
+        })
+        mViewModel.saQna.observe(viewLifecycleOwner, {
+            println("QNA read for SA Type")
+            //set the same data on UI
         })
     }
 

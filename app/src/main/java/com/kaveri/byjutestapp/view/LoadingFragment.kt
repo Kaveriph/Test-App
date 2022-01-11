@@ -48,7 +48,7 @@ class LoadingFragment : Fragment() {
         } else {
             // when the test time is over, deleteTestData()
             // Or
-            findNavController().navigate(R.id.action_testFragment_to_testSubmitFragment)
+            findNavController().navigate(R.id.action_loadingFragment_to_testSubmitFragment)
         }
     }
 

@@ -11,11 +11,15 @@ import com.google.gson.JsonArray
 import com.kaveri.byjutestapp.model.dataobject.Questions
 import com.kaveri.byjutestapp.model.dataobject.Test
 import com.kaveri.byjutestapp.model.repository.TestRepository
+import com.kaveri.byjutestapp.model.room.MCQnA
+import com.kaveri.byjutestapp.model.room.SAQnA
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 
 class TestViewModel(application: Application) : AndroidViewModel(application) {
 
+    var mcQna = MutableLiveData<List<MCQnA>>()
+    var saQna = MutableLiveData<List<SAQnA>>()
     var testEndTime: MutableLiveData<Long> = MutableLiveData()
     private val mTestRepository: TestRepository = TestRepository(context = application)
     var testData: MutableLiveData<Test> = MutableLiveData()
@@ -68,25 +72,26 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
     fun readTestDataFromDb() {
         viewModelScope.launch {
             val testEntity = mTestRepository.getTestData()
-            val questionsJsonArray = Gson().fromJson<JsonArray>(
-                testEntity.questions,
-                JsonArray::class.java
-            )
-            val quest = ArrayList<Questions>()
-            for(question in questionsJsonArray) {
-                quest.add(Gson().fromJson<Questions>(question, Questions::class.java))
+            if (testEntity != null) {
+                val questionsJsonArray = Gson().fromJson<JsonArray>(
+                    testEntity.questions,
+                    JsonArray::class.java
+                )
+                val quest = ArrayList<Questions>()
+                for (question in questionsJsonArray) {
+                    quest.add(Gson().fromJson<Questions>(question, Questions::class.java))
+                }
+                val testObj = Test(
+                    assessmentId = testEntity.assessmentId,
+                    assessmentName = testEntity.assessmentName,
+                    subject = testEntity.subject,
+                    duration = testEntity.duration,
+                    questions = quest,
+                    totalMarks = testEntity.totalMarks
+                )
+                testData.postValue(testObj)
             }
-            val testObj = Test(
-                assessmentId = testEntity.assessmentId,
-                assessmentName = testEntity.assessmentName,
-                subject = testEntity.subject,
-                duration = testEntity.duration,
-                questions = quest,
-                totalMarks = testEntity.totalMarks
-            )
-            testData.postValue(testObj)
         }
-
     }
 
     /**
@@ -97,6 +102,42 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             mTestRepository.deleteTestDataFromDb()
             mTestRepository.clearSharedPrefData(context)
+        }
+    }
+
+    /**
+     * This method inserts the multiple choice questions in the database
+     */
+    fun saveMCQNA(mcQnA: MCQnA) {
+        viewModelScope.launch {
+            mTestRepository.insertMCQnaIntoDb(mcQnA)
+        }
+    }
+
+    /**
+     * This method inserts the SA question and answers in the database.
+     */
+    fun saveSAQna(saQnA: SAQnA) {
+        viewModelScope.launch {
+            mTestRepository.insertSAQnAIntoDb(saQnA)
+        }
+    }
+
+    /**
+     * this method reads the MCQnA stored in the database
+     * */
+    fun readMCQNAFromDb()  {
+        viewModelScope.launch {
+            mcQna.postValue(mTestRepository.getMCQnADataFromDb())
+        }
+    }
+
+    /**
+    * This method reads the Essay Qns and Answers from the database
+    * */
+    fun readSAQNAFromDb()  {
+        viewModelScope.launch {
+            mcQna.postValue(mTestRepository.getSAQnADataFromDb())
         }
     }
 }

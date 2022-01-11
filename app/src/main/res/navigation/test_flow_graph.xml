@@ -50,6 +50,9 @@
         <action
             android:id="@+id/action_loadingFragment_to_testFragment"
             app:destination="@id/testFragment" />
+        <action
+            android:id="@+id/action_loadingFragment_to_testSubmitFragment"
+            app:destination="@id/testSubmitFragment" />
     </fragment>
 
 </navigation>

@@ -5,10 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = arrayOf(Test::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(Test::class, MCQnA::class, SAQnA::class), version = 1, exportSchema = false)
 abstract class TestRoomDatabase : RoomDatabase() {
 
     abstract fun testDao(): TestDao
+
+    abstract fun mcQnaDao(): MCQnADao
+
+    abstract fun saQnaDao(): SAQnADao
 
     companion object {
         private const val TEST_DATABASE: String = "Test_Database"
