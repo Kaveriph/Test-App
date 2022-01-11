@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/startTestFragment"
-        android:name="com.kaveri.byjutestapp.StartTestFragment"
+        android:name="com.kaveri.byjutestapp.view.StartTestFragment"
         android:label="fragment_start_test"
         tools:layout="@layout/fragment_start_test">
         <action
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/testFragment"
-        android:name="com.kaveri.byjutestapp.TestFragment"
+        android:name="com.kaveri.byjutestapp.view.TestFragment"
         android:label="fragment_test"
         tools:layout="@layout/fragment_test">
         <action
