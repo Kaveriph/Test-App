@@ -2,7 +2,7 @@ package com.kaveri.byjutestapp.model.repository
 
 import com.kaveri.byjutestapp.model.room.*
 
-class RoomDbRepository(private val testDao: TestDao, private val mcQnADao: MCQnADao, private val saQnADao: SAQnADao) : IRoomDbRepository {
+class RoomDbRepository(private val testDao: TestDao, private val answersDao: AnswersDao) : IRoomDbRepository {
 
     override suspend fun insert(test: Test) {
         testDao.insert(test)
@@ -16,27 +16,15 @@ class RoomDbRepository(private val testDao: TestDao, private val mcQnADao: MCQnA
         testDao.deleteTestData()
     }
 
-    override suspend fun insertMCQnaIntoDb(mcQnA: MCQnA) {
-        mcQnADao.insert(mcQnA)
+    override suspend fun insertAnswersIntoDb(answers: Answers) {
+        answersDao.insert(answers)
     }
 
-    override suspend fun getMCQnADataFromDb(): List<MCQnA> {
-        return mcQnADao.getMCQnAData()
+    override suspend fun getAnswersFromDb(): List<Answers> {
+        return answersDao.getAnswers()
     }
 
-    override suspend fun deleteMCQnAFromDb() {
-        mcQnADao.deleteMcQnaData()
-    }
-
-    override suspend fun insertSAQnAIntoDb(saQnA: SAQnA) {
-        saQnADao.insert(saQnA)
-    }
-
-    override suspend fun getSAQnADataFromDb(): List<SAQnA> {
-        return saQnADao.getSAQnAData()
-    }
-
-    override suspend fun deleteSAQnAFromDb() {
-        saQnADao.deleteSaQnAData()
+    override suspend fun deleteAnswersFromDb() {
+        answersDao.deleteAnswers()
     }
 }

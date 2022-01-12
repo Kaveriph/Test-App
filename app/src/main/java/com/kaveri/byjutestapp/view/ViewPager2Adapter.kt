@@ -12,13 +12,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kaveri.byjutestapp.R
 import com.kaveri.byjutestapp.model.dataobject.Questions
-import com.kaveri.byjutestapp.model.room.MCQnA
-import com.kaveri.byjutestapp.model.room.SAQnA
+import com.kaveri.byjutestapp.model.room.Answers
 import kotlinx.android.synthetic.main.mc_test_layout.view.*
 import kotlinx.android.synthetic.main.mc_test_layout.view.tvQuestion
 import kotlinx.android.synthetic.main.sa_test_layout.view.*
 
-class ViewPager2Adapter(val context: Context, var listOfQuestions: ArrayList<Questions>, var mcQtnCallback: (MCQnA) -> Unit, var saQtnCallback: (SAQnA) -> Unit) :
+class ViewPager2Adapter(val context: Context, var listOfQuestions: ArrayList<Questions>, var answerSelectedCallback: (Answers) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -34,13 +33,12 @@ class ViewPager2Adapter(val context: Context, var listOfQuestions: ArrayList<Que
         return when (viewType) {
             VIEW_TYPE_MC -> {
                 MCViewHolder(
-                    LayoutInflater.from(context).inflate(R.layout.mc_test_layout, parent, false)
-                , mcQtnCallback
+                    LayoutInflater.from(context).inflate(R.layout.mc_test_layout, parent, false), answerSelectedCallback
                 )
             }
             else -> {
                 SAViewHolder(
-                    LayoutInflater.from(context).inflate(R.layout.sa_test_layout, parent, false), saQtnCallback
+                    LayoutInflater.from(context).inflate(R.layout.sa_test_layout, parent, false), answerSelectedCallback
                 )
             }
         }
@@ -72,7 +70,7 @@ class ViewPager2Adapter(val context: Context, var listOfQuestions: ArrayList<Que
     }
 
 
-    class MCViewHolder(itemView: View, mcQtnCallback: (MCQnA) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    class MCViewHolder(itemView: View, mcQtnCallback: (Answers) -> Unit) : RecyclerView.ViewHolder(itemView) {
         var tvQuestion: TextView = itemView.tvQuestion
         var radioGroup: RadioGroup = itemView.answerGroup
         var option1: RadioButton = itemView.option1
@@ -90,23 +88,23 @@ class ViewPager2Adapter(val context: Context, var listOfQuestions: ArrayList<Que
             radioGroup.setOnCheckedChangeListener { group, checkedId ->
                 val radioButton = itemView.findViewById<RadioButton>(checkedId)
                 println("selected answer: ${radioButton.text}")
-                mcQtnCallback.invoke(MCQnA(question.id ?: "", question.qno ?: -1, question.text ?: "", "${radioButton.text}"))
+                mcQtnCallback.invoke(Answers(question.id ?: "", question.type ?: "MC", question.qno ?: -1, question.text ?: "", "${radioButton.text}", "Not Applicable"))
             }
         }
 
     }
 
-    class SAViewHolder(itemView: View, saQtnCallback: (SAQnA) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    class SAViewHolder(itemView: View, saQtnCallback: (Answers) -> Unit) : RecyclerView.ViewHolder(itemView) {
         var tvQuestion: TextView = itemView.tvQuestion
         var etAnswer: EditText = itemView.etAnswer
-        var saQtnCallback = saQtnCallback
+        var answerSelectedCallback = saQtnCallback
 
         fun bind(question: Questions) {
             tvQuestion.text = Html.fromHtml(question.text)
 
             etAnswer.setOnFocusChangeListener(  { view: View, hasFocus: Boolean ->
                 if(!hasFocus) {
-                    saQtnCallback.invoke(SAQnA(question.id ?: "", question.qno ?: -1, question.text ?: "", "${etAnswer.text}", ""))
+                    answerSelectedCallback.invoke(Answers(question.id ?: "", question.type ?: "SA", question.qno ?: -1, question.text ?: "", "${etAnswer.text}", ""))
                 }
             })
         }

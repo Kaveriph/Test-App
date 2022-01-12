@@ -11,15 +11,12 @@ import com.google.gson.JsonArray
 import com.kaveri.byjutestapp.model.dataobject.Questions
 import com.kaveri.byjutestapp.model.dataobject.Test
 import com.kaveri.byjutestapp.model.repository.TestRepository
-import com.kaveri.byjutestapp.model.room.MCQnA
-import com.kaveri.byjutestapp.model.room.SAQnA
+import com.kaveri.byjutestapp.model.room.Answers
 import kotlinx.coroutines.launch
-import org.json.JSONArray
 
 class TestViewModel(application: Application) : AndroidViewModel(application) {
 
-    var mcQna = MutableLiveData<List<MCQnA>>()
-    var saQna = MutableLiveData<List<SAQnA>>()
+    var answers = MutableLiveData<List<Answers>>()
     var testEndTime: MutableLiveData<Long> = MutableLiveData()
     private val mTestRepository: TestRepository = TestRepository(context = application)
     var testData: MutableLiveData<Test> = MutableLiveData()
@@ -106,38 +103,23 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * This method inserts the multiple choice questions in the database
-     */
-    fun saveMCQNA(mcQnA: MCQnA) {
-        viewModelScope.launch {
-            mTestRepository.insertMCQnaIntoDb(mcQnA)
-        }
-    }
-
-    /**
-     * This method inserts the SA question and answers in the database.
-     */
-    fun saveSAQna(saQnA: SAQnA) {
-        viewModelScope.launch {
-            mTestRepository.insertSAQnAIntoDb(saQnA)
-        }
-    }
-
-    /**
-     * this method reads the MCQnA stored in the database
-     * */
-    fun readMCQNAFromDb()  {
-        viewModelScope.launch {
-            mcQna.postValue(mTestRepository.getMCQnADataFromDb())
-        }
-    }
-
-    /**
     * This method reads the Essay Qns and Answers from the database
     * */
-    fun readSAQNAFromDb()  {
+    fun readAnswersFromDb()  {
         viewModelScope.launch {
-            mcQna.postValue(mTestRepository.getSAQnADataFromDb())
+            answers.postValue(mTestRepository.getAnswersFromDb())
+        }
+    }
+
+    fun saveAnswersInDb(answers: Answers) {
+        viewModelScope.launch {
+            mTestRepository.insertAnswersIntoDb(answers = answers)
+        }
+    }
+
+    fun deleteAnswersInDb() {
+        viewModelScope.launch {
+            mTestRepository.deleteAnswersFromDb()
         }
     }
 }

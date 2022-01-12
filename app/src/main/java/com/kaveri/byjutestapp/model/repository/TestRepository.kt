@@ -3,7 +3,7 @@ package com.kaveri.byjutestapp.model.repository
 import android.content.Context
 import com.kaveri.byjutestapp.model.dataobject.Test
 import com.kaveri.byjutestapp.model.room.MCQnA
-import com.kaveri.byjutestapp.model.room.SAQnA
+import com.kaveri.byjutestapp.model.room.Answers
 import com.kaveri.byjutestapp.model.room.TestRoomDatabase
 
 /**
@@ -21,7 +21,7 @@ class TestRepository(val context: Context) : ISharedPrefRepository, INetworkRepo
         TestRoomDatabase.getDatabase(context)
     }
     private val dbRepository by lazy {
-        RoomDbRepository(database.testDao(), database.mcQnaDao(), database.saQnaDao())
+        RoomDbRepository(database.testDao(), database.andswersDao())
     }
 
     /**
@@ -85,27 +85,15 @@ class TestRepository(val context: Context) : ISharedPrefRepository, INetworkRepo
         return dbRepository.deleteTestDataFromDb()
     }
 
-    override suspend fun insertMCQnaIntoDb(mcQnA: MCQnA) {
-        dbRepository.insertMCQnaIntoDb(mcQnA)
+    override suspend fun insertAnswersIntoDb(answers: Answers) {
+        dbRepository.insertAnswersIntoDb(answers = answers)
     }
 
-    override suspend fun getMCQnADataFromDb(): List<MCQnA> {
-        return dbRepository.getMCQnADataFromDb()
+    override suspend fun getAnswersFromDb(): List<Answers> {
+        return dbRepository.getAnswersFromDb()
     }
 
-    override suspend fun deleteMCQnAFromDb() {
-        dbRepository.deleteMCQnAFromDb()
-    }
-
-    override suspend fun insertSAQnAIntoDb(saQnA: SAQnA) {
-        dbRepository.insertSAQnAIntoDb(saQnA = saQnA)
-    }
-
-    override suspend fun getSAQnADataFromDb(): List<SAQnA> {
-        return dbRepository.getSAQnADataFromDb()
-    }
-
-    override suspend fun deleteSAQnAFromDb() {
-        dbRepository.deleteSAQnAFromDb()
+    override suspend fun deleteAnswersFromDb() {
+        dbRepository.deleteAnswersFromDb()
     }
 }

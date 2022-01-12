@@ -11,8 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.kaveri.byjutestapp.R
 import com.kaveri.byjutestapp.model.dataobject.Questions
-import com.kaveri.byjutestapp.model.room.MCQnA
-import com.kaveri.byjutestapp.model.room.SAQnA
+import com.kaveri.byjutestapp.model.room.Answers
 import com.kaveri.byjutestapp.viewmodel.TestViewModel
 import kotlinx.android.synthetic.main.fragment_test.*
 import java.util.*
@@ -50,24 +49,16 @@ class TestFragment : Fragment() {
     }
 
     private fun initView() {
-        viewPager2Adapter = ViewPager2Adapter(requireContext(), listOfQuestions, mcQtnCallback = { mcQna -> kotlin.run{
-            saveMcQna(mcQna)
-        } },
-        saQtnCallback = { saQna -> kotlin.run{
-            saveSAQna(saQna)
-        }})
+        viewPager2Adapter = ViewPager2Adapter(requireContext(), listOfQuestions, answerSelectedCallback = { answers -> kotlin.run{
+            saveAnswers(answers)
+        } })
         testViewPager.adapter = viewPager2Adapter
         testViewPager.registerOnPageChangeCallback(ViewPageCallback())
     }
 
-    private fun saveSAQna(saQna: SAQnA) {
-        println("SA QNA: ${saQna.ans}")
-        mViewModel.saveMCQNA(saQna)
-    }
-
-    private fun saveMcQna(mcQna: MCQnA) {
-        println("MC QNA: ${mcQna.ans}")
-        mViewModel.saveMCQNA(mcQna)
+    private fun saveAnswers(ans: Answers) {
+        println(" QNA: ${ans.ans}")
+        mViewModel.saveAnswersInDb(ans)
     }
 
     class ViewPageCallback : ViewPager2.OnPageChangeCallback() {
@@ -105,11 +96,7 @@ class TestFragment : Fragment() {
             listOfQuestions.addAll(it.questions)
             viewPager2Adapter.notifyDataSetChanged()
         })
-        mViewModel.mcQna.observe(viewLifecycleOwner, {
-            println("QNA read for MC type")
-            //set the same data on UI
-        })
-        mViewModel.saQna.observe(viewLifecycleOwner, {
+        mViewModel.answers.observe(viewLifecycleOwner, {
             println("QNA read for SA Type")
             //set the same data on UI
         })
