@@ -12,7 +12,7 @@ import com.kaveri.byjutestapp.model.dataobject.Questions
 import com.kaveri.byjutestapp.model.dataobject.Test
 import com.kaveri.byjutestapp.model.repository.TestRepository
 import com.kaveri.byjutestapp.model.room.Answers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class TestViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,6 +21,7 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
     var testSubmitted: MutableLiveData<Boolean> = MutableLiveData()
     private val mTestRepository: TestRepository = TestRepository(context = application)
     var testData: MutableLiveData<Test> = MutableLiveData()
+    var mTextToDisplay: MutableLiveData<String> = MutableLiveData()
 
     init {
         testSubmitted.value = mTestRepository.getTestSubmitted(getApplication())
@@ -145,5 +146,44 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getTestSubmitted(context: Context) : Boolean {
         return mTestRepository.getTestSubmitted(context)
+    }
+
+
+    /**
+     * This method runa a coroutine to update the timer for the user.
+     */
+    fun updateTimer() {
+        testEndTime.value?.let {
+            val endTime = it
+            viewModelScope.launch {
+                val currentTimeInMillis = System.currentTimeMillis()
+                println("time: $endTime  -------  $currentTimeInMillis")
+                var secondsLeft = (endTime / 1000) - currentTimeInMillis / 1000
+                val endTimeInMin = (endTime / 60000)
+                val currentTimeInMin = currentTimeInMillis / 60000
+                var minLeft = endTimeInMin - currentTimeInMin
+                println("min left $minLeft : $secondsLeft")
+                while (minLeft > 1) {
+                    val texttoDisplay = "$minLeft min"
+                    println("min left $minLeft")
+                    mTextToDisplay.postValue(texttoDisplay)
+                    delay(secondsLeft)
+                    minLeft--
+                    secondsLeft = 60000
+                    println("min left $minLeft : $secondsLeft")
+                }
+                var seconds = 60
+                while (seconds > 1) {
+                    val textToDisplay = "$seconds sec"
+                    mTextToDisplay.postValue(textToDisplay)
+                    delay(1000)
+                    seconds--
+                    println("min left $minLeft : $secondsLeft")
+                }
+                withContext(Dispatchers.Main) {
+                    submitTest(getApplication())
+                }
+            }
+        }
     }
 }

@@ -96,6 +96,9 @@ class TestFragment : Fragment() {
     }
 
     private fun initObservers() {
+        mViewModel.mTextToDisplay.observe(viewLifecycleOwner, {
+            if(tvTimer != null) tvTimer.text = it
+        })
         mViewModel.testEndTime.observe(viewLifecycleOwner, {
             println("TestFrag Test end time is ${Date(it)}")
             handleTestStatus(it, mViewModel.testSubmitted.value ?: false)
@@ -121,11 +124,12 @@ class TestFragment : Fragment() {
             retrieveQuestionPaper()
         } else if (testEndTime > currentTime && !testSubmitted) {
             loadTheSavedTest()
-            updateTimer(testEndTime, { textToDisplay ->
+            mViewModel.updateTimer()
+          /*  updateTimer(testEndTime, { textToDisplay ->
                 run {
-                    tvTimer.text = textToDisplay
+                    if(tvTimer != null) tvTimer.text = textToDisplay
                 }
-            })
+            })*/
         } else {
             // when the test time is over, deleteTestData()
             // Or
@@ -160,7 +164,9 @@ class TestFragment : Fragment() {
                 delay(1000)
                 seconds--
             }
-            submitTest()
+            withContext(Dispatchers.Main) {
+                submitTest()
+            }
         }
     }
 
