@@ -71,8 +71,8 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
 
             val answers =
                 if(question.type.equals("MC"))
-                        Answers(question.id ?: "", question.type ?: "", question.qno ?: -1, question.text ?: "", "Not Applicable", "Not applicable")
-                else Answers(question.id ?: "", question.type ?: "", question.qno ?: -1, question.text ?: "", "Not Applicable", "")
+                        Answers(question.id ?: "", question.type ?: "", question.qno ?: -1, question.text ?: "", "Not Attempted", "Not applicable")
+                else Answers(question.id ?: "", question.type ?: "", question.qno ?: -1, question.text ?: "", "Not Attempted", "")
 
             saveAnswersInDb(answers)
         }
