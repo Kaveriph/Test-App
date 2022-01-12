@@ -1,6 +1,5 @@
 package com.kaveri.byjutestapp.model.repository
 
-import com.kaveri.byjutestapp.model.room.MCQnA
 import com.kaveri.byjutestapp.model.room.Answers
 import com.kaveri.byjutestapp.model.room.Test
 

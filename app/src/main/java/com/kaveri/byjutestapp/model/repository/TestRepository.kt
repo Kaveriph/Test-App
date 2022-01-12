@@ -2,7 +2,6 @@ package com.kaveri.byjutestapp.model.repository
 
 import android.content.Context
 import com.kaveri.byjutestapp.model.dataobject.Test
-import com.kaveri.byjutestapp.model.room.MCQnA
 import com.kaveri.byjutestapp.model.room.Answers
 import com.kaveri.byjutestapp.model.room.TestRoomDatabase
 
