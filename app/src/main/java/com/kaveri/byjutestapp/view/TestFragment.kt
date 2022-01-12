@@ -108,6 +108,7 @@ class TestFragment : Fragment() {
         })
         mViewModel.testData.observe(viewLifecycleOwner, {
             println("Test data retrieved ${it.toString()}")
+            listOfQuestions.clear()
             listOfQuestions.addAll(it.questions)
             viewPager2Adapter.notifyDataSetChanged()
         })
