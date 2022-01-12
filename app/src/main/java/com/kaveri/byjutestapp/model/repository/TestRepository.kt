@@ -51,6 +51,14 @@ class TestRepository(val context: Context) : ISharedPrefRepository, INetworkRepo
         sharedPrefRepository.clearTestInfo(context)
     }
 
+    override fun submitTest(context: Context) {
+        sharedPrefRepository.submitTest(context)
+    }
+
+    override fun getTestSubmitted(context: Context): Boolean {
+        return sharedPrefRepository.getTestSubmitted(context)
+    }
+
     /***
      * This method reads the Test data from the backend
      * */

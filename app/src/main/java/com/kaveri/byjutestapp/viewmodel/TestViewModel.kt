@@ -18,10 +18,12 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
 
     var answers = MutableLiveData<List<Answers>>()
     var testEndTime: MutableLiveData<Long> = MutableLiveData()
+    var testSubmitted: MutableLiveData<Boolean> = MutableLiveData()
     private val mTestRepository: TestRepository = TestRepository(context = application)
     var testData: MutableLiveData<Test> = MutableLiveData()
 
     init {
+        testSubmitted.value = mTestRepository.getTestSubmitted(getApplication())
         testEndTime.value = mTestRepository.getTestEndTime(getApplication())
     }
 
@@ -59,6 +61,19 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
             )
         viewModelScope.launch {
             mTestRepository.insert(testEntity)
+        }
+        storeDefaultAnswersInDb(test)
+    }
+
+    private fun storeDefaultAnswersInDb(test: Test) {
+        for(question in test.questions) {
+
+            val answers =
+                if(question.type.equals("MC"))
+                        Answers(question.id ?: "", question.type ?: "", question.qno ?: -1, question.text ?: "", "Not Applicable", "Not applicable")
+                else Answers(question.id ?: "", question.type ?: "", question.qno ?: -1, question.text ?: "", "Not Applicable", "")
+
+            saveAnswersInDb(answers)
         }
     }
 
@@ -121,5 +136,14 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             mTestRepository.deleteAnswersFromDb()
         }
+    }
+
+    fun submitTest(context: Context) {
+        mTestRepository.submitTest(context = context)
+        testSubmitted.postValue(true)
+    }
+
+    fun getTestSubmitted(context: Context) : Boolean {
+        return mTestRepository.getTestSubmitted(context)
     }
 }

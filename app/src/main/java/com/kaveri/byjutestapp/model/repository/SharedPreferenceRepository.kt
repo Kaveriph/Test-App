@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 *
 * */
 class SharedPreferenceRepository {
+    private val TEST_SUBMITTED = "Test_submitted"
     private val sharedPrefFile = "ByjusSharedPreference"
     private val TEST_END_TIME = "test_end_time"
     /**
@@ -49,5 +50,16 @@ class SharedPreferenceRepository {
     * */
     fun clearTestInfo(context: Context) {
         getSharedPreference(context).edit().clear().apply()
+    }
+
+
+    fun submitTest(context: Context) {
+        getSharedPreference(context).edit().
+                putBoolean(TEST_SUBMITTED, true)
+            .apply()
+    }
+
+    fun getTestSubmitted(context: Context) : Boolean {
+        return getSharedPreference(context).getBoolean(TEST_SUBMITTED, false)
     }
 }

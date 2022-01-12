@@ -101,7 +101,6 @@ class ViewPager2Adapter(val context: Context, var listOfQuestions: ArrayList<Que
 
         fun bind(question: Questions) {
             tvQuestion.text = Html.fromHtml(question.text)
-
             etAnswer.setOnFocusChangeListener(  { view: View, hasFocus: Boolean ->
                 if(!hasFocus) {
                     answerSelectedCallback.invoke(Answers(question.id ?: "", question.type ?: "SA", question.qno ?: -1, question.text ?: "", "${etAnswer.text}", ""))

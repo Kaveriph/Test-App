@@ -6,6 +6,22 @@
     app:startDestination="@id/loadingFragment">
 
     <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.kaveri.byjutestapp.view.LoadingFragment"
+        android:label="fragment_loading"
+        tools:layout="@layout/fragment_loading">
+        <action
+            android:id="@+id/action_loadingFragment_to_startTestFragment"
+            app:destination="@id/startTestFragment" />
+        <action
+            android:id="@+id/action_loadingFragment_to_testFragment"
+            app:destination="@id/testFragment" />
+        <action
+            android:id="@+id/action_loadingFragment_to_testSubmitFragment"
+            app:destination="@id/testSubmitFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/startTestFragment"
         android:name="com.kaveri.byjutestapp.view.StartTestFragment"
         android:label="fragment_start_test"
@@ -27,10 +43,7 @@
         <action
             android:id="@+id/action_testFragment_to_testSubmitFragment"
             app:destination="@id/testSubmitFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+          />
     </fragment>
 
     <fragment
@@ -39,20 +52,5 @@
         android:label="fragment_test_submit"
         tools:layout="@layout/fragment_test_submit" />
 
-    <fragment
-        android:id="@+id/loadingFragment"
-        android:name="com.kaveri.byjutestapp.view.LoadingFragment"
-        android:label="fragment_loading"
-        tools:layout="@layout/fragment_loading">
-        <action
-            android:id="@+id/action_loadingFragment_to_startTestFragment"
-            app:destination="@id/startTestFragment" />
-        <action
-            android:id="@+id/action_loadingFragment_to_testFragment"
-            app:destination="@id/testFragment" />
-        <action
-            android:id="@+id/action_loadingFragment_to_testSubmitFragment"
-            app:destination="@id/testSubmitFragment" />
-    </fragment>
 
 </navigation>
